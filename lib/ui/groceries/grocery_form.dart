@@ -57,51 +57,25 @@ class _GroceryFormState extends State<GroceryForm> {
       Navigator.pop<Grocery>(context, newGrocery);
   }
 
-  bool isEatable(GroceryCategory category) {
-    switch (category) {
-      case GroceryCategory.vegetables:
-        return true;
-      case GroceryCategory.fruit:
-        return true;
-      case GroceryCategory.meat:
-        return true;
-      case GroceryCategory.dairy:
-        return true;
-      case GroceryCategory.carbs:
-        return true;
-      case GroceryCategory.sweets:
-        return true;
-      case GroceryCategory.spices:
-        return true;
-      case GroceryCategory.hygiene:
-        return true;
-      case GroceryCategory.convenience:
-        return false;
-      case GroceryCategory.other:
-        return false;
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Add a new item')),
       body: Padding(
         padding: const EdgeInsets.all(12),
-        child: Form(
-          child: Column(
-            children: [
-              TextFormField(
-                controller: _nameController,
-                maxLength: 50,
-                decoration: const InputDecoration(label: Text('Name')),
-              ),
+        child: Column(
+          children: [
+            TextField(
+              controller: _nameController,
+              maxLength: 50,
+              decoration: const InputDecoration(label: Text('Name')),
+            ),
               const SizedBox(height: 10),
               Row(
                 crossAxisAlignment: CrossAxisAlignment.end,
                 children: [
                   Expanded(
-                    child: TextFormField(
+                    child: TextField(
                       controller: _quantityController,
                       decoration: const InputDecoration(
                         label: Text('Quantity'),
@@ -110,8 +84,8 @@ class _GroceryFormState extends State<GroceryForm> {
                   ),
                   const SizedBox(width: 8),
                   Expanded(
-                    child: DropdownButtonFormField<GroceryCategory>(
-                      initialValue: _selectedCategory,
+                    child: DropdownButton<GroceryCategory>(
+                      value: _selectedCategory,
                       items: GroceryCategory.values
                           .map(
                             (g) => DropdownMenuItem<GroceryCategory>(
@@ -155,7 +129,6 @@ class _GroceryFormState extends State<GroceryForm> {
             ],
           ),
         ),
-      ),
-    );
+      );
   }
 }
