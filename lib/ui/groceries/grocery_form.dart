@@ -1,0 +1,161 @@
+import 'package:flutter/material.dart';
+
+import '../../models/grocery.dart';
+
+
+class GroceryForm extends StatefulWidget {
+  const GroceryForm({super.key});
+
+  @override
+  State<GroceryForm> createState() {
+    return _GroceryFormState();
+  }
+}
+
+class _GroceryFormState extends State<GroceryForm> {
+  // Default settings
+  static const defautName = "New grocery";
+  static const defaultQuantity = 1;
+  static const defaultCategory = GroceryCategory.fruit;
+
+  // Inputs
+  final _nameController = TextEditingController();
+  final _quantityController = TextEditingController();
+  GroceryCategory _selectedCategory = defaultCategory;
+
+
+  @override
+  void initState() {
+    super.initState();
+
+    // Initialize intputs with default settings
+    _nameController.text = defautName;
+    _quantityController.text = defaultQuantity.toString();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+
+    // Dispose the controlers
+    _nameController.dispose();
+    _quantityController.dispose();
+  }
+
+  void onReset() {
+  }
+
+  void onAdd() {
+    // Create and return the new grocery
+
+      Grocery newGrocery = Grocery(
+        id: 'a',
+        name: _nameController.text,
+        quantity: int.parse(_quantityController.text),
+        category: _selectedCategory,
+      );
+      Navigator.pop<Grocery>(context, newGrocery);
+  }
+
+  bool isEatable(GroceryCategory category) {
+    switch (category) {
+      case GroceryCategory.vegetables:
+        return true;
+      case GroceryCategory.fruit:
+        return true;
+      case GroceryCategory.meat:
+        return true;
+      case GroceryCategory.dairy:
+        return true;
+      case GroceryCategory.carbs:
+        return true;
+      case GroceryCategory.sweets:
+        return true;
+      case GroceryCategory.spices:
+        return true;
+      case GroceryCategory.hygiene:
+        return true;
+      case GroceryCategory.convenience:
+        return false;
+      case GroceryCategory.other:
+        return false;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(title: const Text('Add a new item')),
+      body: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Form(
+          child: Column(
+            children: [
+              TextFormField(
+                controller: _nameController,
+                maxLength: 50,
+                decoration: const InputDecoration(label: Text('Name')),
+              ),
+              const SizedBox(height: 10),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: TextFormField(
+                      controller: _quantityController,
+                      decoration: const InputDecoration(
+                        label: Text('Quantity'),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 8),
+                  Expanded(
+                    child: DropdownButtonFormField<GroceryCategory>(
+                      initialValue: _selectedCategory,
+                      items: GroceryCategory.values
+                          .map(
+                            (g) => DropdownMenuItem<GroceryCategory>(
+                              value: g,
+                              child: Row(
+                                children: [
+                                  Container(
+                                    width: 15,
+                                    height: 15,
+                                    color: g.color,
+                                  ),
+                                  SizedBox(width: 10),
+                                  Text(g.name),
+                                ],
+                              ),
+                            ),
+                          )
+                          .toList(),
+                      onChanged: (value) {
+                        if (value != null) {
+                          setState(() {
+                            _selectedCategory = value;
+                          });
+                        }
+                      },
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(height: 12),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  TextButton(onPressed: onReset, child: const Text('Reset')),
+                  ElevatedButton(
+                    onPressed: onAdd,
+                    child: const Text('Add Item'),
+                  ),
+                ],
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+}
